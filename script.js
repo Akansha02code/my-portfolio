@@ -350,7 +350,60 @@ logo.addEventListener('click', () => {
     });
 });
 
-// ============================================================================ // CONTACT FORM // ============================================================================ const contactForm = document.getElementById('contactForm'); const formNote = document.getElementById('formNote'); if (contactForm) { contactForm.addEventListener('submit', async (e) => { e.preventDefault(); const formData = new FormData(contactForm); formNote.textContent = "Sending message..."; formNote.className = "form-note"; try { const response = await fetch(contactForm.action, { method: "POST", body: formData, headers: { Accept: "application/json" } }); if (response.ok) { formNote.textContent = "✅ Thank you! Your message has been sent successfully."; formNote.className = "form-note success"; contactForm.reset(); setTimeout(() => { formNote.textContent = ""; formNote.className = "form-note"; }, 5000); } else { throw new Error("Submission failed"); } } catch (error) { formNote.textContent = "❌ Failed to send message. Please try again."; formNote.className = "form-note error"; } }); }
+// ============================================================================
+// CONTACT FORM - FORMSUBMIT AJAX
+// ============================================================================
+
+const contactForm = document.getElementById('contactForm');
+const formNote = document.getElementById('formNote');
+
+console.log("Contact Form JS Loaded");
+
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        console.log("Submit Intercepted");
+
+        formNote.textContent = "Sending message...";
+        formNote.className = "form-note";
+
+        try {
+            const formData = new FormData(contactForm);
+
+            const response = await fetch(contactForm.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                formNote.textContent =
+                    "✅ Thank you! Your message has been sent successfully.";
+                formNote.className = "form-note success";
+
+                contactForm.reset();
+
+                setTimeout(() => {
+                    formNote.textContent = "";
+                    formNote.className = "form-note";
+                }, 5000);
+            } else {
+                throw new Error("Form submission failed");
+            }
+
+        } catch (error) {
+            console.error(error);
+
+            formNote.textContent =
+                "❌ Failed to send message. Please try again.";
+            formNote.className = "form-note error";
+        }
+    });
+}
+
 // ============================================================================
 // SCROLL PROGRESS
 // ============================================================================
