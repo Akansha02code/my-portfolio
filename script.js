@@ -48,10 +48,10 @@ function updateBlobPosition() {
     // Smooth following effect
     blobX += (mouseX - blobX) * 0.1;
     blobY += (mouseY - blobY) * 0.1;
-    
+
     movingBlob.style.left = blobX - 75 + 'px';
     movingBlob.style.top = blobY - 75 + 'px';
-    
+
     requestAnimationFrame(updateBlobPosition);
 }
 
@@ -80,7 +80,7 @@ function typeWriter() {
     }
 
     const currentTitle = titles[titleIndex];
-    
+
     if (isDeleting) {
         textElement.textContent = currentTitle.substring(0, charIndex - 1);
         charIndex--;
@@ -129,10 +129,10 @@ function initThreeJS() {
     camera.position.z = 400;
 
     // Renderer setup
-    renderer = new THREE.WebGLRenderer({ 
-        canvas: canvas, 
-        antialias: true, 
-        alpha: true 
+    renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        antialias: true,
+        alpha: true
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -331,7 +331,7 @@ navLinks.forEach(link => {
         e.preventDefault();
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
-        
+
         if (targetSection) {
             gsap.to(window, {
                 duration: 0.8,
@@ -350,54 +350,7 @@ logo.addEventListener('click', () => {
     });
 });
 
-// ============================================================================
-// CONTACT FORM
-// ============================================================================
-
-const contactForm = document.getElementById('contactForm');
-const formNote = document.getElementById('formNote');
-
-contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        formNote.textContent = 'Please enter a valid email address.';
-        formNote.className = 'form-note error';
-        return;
-    }
-
-    // Here you would typically send the form data to a backend service
-    // For now, we'll just show a success message
-    formNote.textContent = 'Sending message...';
-    formNote.className = 'form-note';
-
-    try {
-        // Simulating form submission delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        formNote.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
-        formNote.className = 'form-note success';
-
-        // Reset form
-        contactForm.reset();
-
-        // Clear message after 5 seconds
-        setTimeout(() => {
-            formNote.textContent = '';
-            formNote.className = 'form-note';
-        }, 5000);
-    } catch (error) {
-        formNote.textContent = 'Error sending message. Please try again.';
-        formNote.className = 'form-note error';
-    }
-});
-
+// ============================================================================ // CONTACT FORM // ============================================================================ const contactForm = document.getElementById('contactForm'); const formNote = document.getElementById('formNote'); if (contactForm) { contactForm.addEventListener('submit', async (e) => { e.preventDefault(); const formData = new FormData(contactForm); formNote.textContent = "Sending message..."; formNote.className = "form-note"; try { const response = await fetch(contactForm.action, { method: "POST", body: formData, headers: { Accept: "application/json" } }); if (response.ok) { formNote.textContent = "✅ Thank you! Your message has been sent successfully."; formNote.className = "form-note success"; contactForm.reset(); setTimeout(() => { formNote.textContent = ""; formNote.className = "form-note"; }, 5000); } else { throw new Error("Submission failed"); } } catch (error) { formNote.textContent = "❌ Failed to send message. Please try again."; formNote.className = "form-note error"; } }); }
 // ============================================================================
 // SCROLL PROGRESS
 // ============================================================================
@@ -406,7 +359,7 @@ function updateScrollProgress() {
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrolled = (winScroll / height) * 100;
-    
+
     // You can use this for scroll progress bar if added to HTML
     document.documentElement.style.setProperty('--scroll-progress', scrolled + '%');
 }
@@ -461,7 +414,7 @@ document.querySelectorAll('section').forEach(section => {
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const elements = document.querySelectorAll('[data-parallax]');
-    
+
     elements.forEach(element => {
         const speed = element.getAttribute('data-parallax');
         element.style.transform = `translateY(${scrollY * speed}px)`;
@@ -480,17 +433,17 @@ window.addEventListener('load', () => {
 // KEYBOARD NAVIGATION
 // ============================================================================
 
-const sections = Array.from(document.querySelectorAll('section[id]'));
+const pageSections = Array.from(document.querySelectorAll('section[id]'));
 let currentSectionIndex = 0;
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') {
         e.preventDefault();
-        if (currentSectionIndex < sections.length - 1) {
+        if (currentSectionIndex < pageSections.length - 1) {
             currentSectionIndex++;
             gsap.to(window, {
                 duration: 0.8,
-                scrollTo: sections[currentSectionIndex],
+                scrollTo: pageSections[currentSectionIndex],
                 ease: 'power2.inOut'
             });
         }
@@ -510,8 +463,8 @@ document.addEventListener('keydown', (e) => {
 // Update current section on scroll
 window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
-    
-    sections.forEach((section, index) => {
+
+    pageSections.forEach((section, index) => {
         const rect = section.getBoundingClientRect();
         if (rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
             currentSectionIndex = index;
