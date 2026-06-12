@@ -1,0 +1,29 @@
+# OS Files
+.DS_Store
+Thumbs.db
+.env.local
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build/Dist
+node_modules/
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Optional: Exclude personal files (uncomment if needed)
+# resume.pdf
+# contact-info.txt
+
+# Ignore all files with extensions
+# *.bak
+# *.tmp

@@ -1,0 +1,34 @@
+# Resume Placeholder
+
+## Instructions
+
+To add your resume to the portfolio:
+
+1. **Prepare your resume** as a PDF file
+   - Name it `resume.pdf`
+   - Place it in the root directory of the portfolio (same folder as `index.html`)
+
+2. **The resume link** in the portfolio will automatically point to this file
+   - Located in the hero section bottom-right corner
+   - Text: "RESUME 📋"
+
+3. **Update resume**
+   - Simply replace the `resume.pdf` file with an updated version
+   - No code changes needed
+
+## Current Setup
+
+- The HTML references: `<a href="resume.pdf" class="resume-link">RESUME 📋</a>`
+- This works for local viewing and when deployed to any server
+- The file path is relative, so ensure resume.pdf is in the same directory as index.html
+
+## Tips
+
+- Keep your resume PDF under 5MB for fast loading
+- Use a clean, professional PDF format
+- Ensure it opens correctly in all browsers
+- Test the link before deploying
+
+---
+
+Once you add your resume.pdf file, the link will be fully functional!
