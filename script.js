@@ -329,26 +329,26 @@ const logo = document.querySelector('.logo');
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
+
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
 
         if (targetSection) {
-            gsap.to(window, {
-                duration: 0.8,
-                scrollTo: targetSection,
-                ease: 'power2.inOut'
+            targetSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         }
     });
 });
 
-logo.addEventListener('click', () => {
-    gsap.to(window, {
-        duration: 0.8,
-        scrollTo: '#hero',
-        ease: 'power2.inOut'
+if (logo) {
+    logo.addEventListener('click', () => {
+        document.querySelector('#hero')?.scrollIntoView({
+            behavior: 'smooth'
+        });
     });
-});
+}
 
 // ============================================================================
 // CONTACT FORM - FORMSUBMIT AJAX
