@@ -117,6 +117,8 @@ let scene, camera, renderer, shapes = [];
 
 function initThreeJS() {
     const canvas = document.getElementById('threeCanvas');
+    if (!canvas) return;
+
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
 
@@ -129,11 +131,16 @@ function initThreeJS() {
     camera.position.z = 400;
 
     // Renderer setup
-    renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        antialias: true,
-        alpha: true
-    });
+    try {
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: true
+        });
+    } catch (error) {
+        console.warn('WebGL is unavailable; skipping 3D effects.', error);
+        return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x0a0a0a, 0);
@@ -351,55 +358,61 @@ if (logo) {
 }
 
 // ============================================================================
-// CONTACT FORM - FORMSUBMIT AJAX
+// CONTACT FORM - WEB3FORMS
 // ============================================================================
 
+const WEB3FORMS_ACCESS_KEY = '6e94085f-2548-43a6-a090-1c80a80af8de';
 const contactForm = document.getElementById('contactForm');
 const formNote = document.getElementById('formNote');
 
-console.log("Contact Form JS Loaded");
+if (contactForm && formNote) {
+    contactForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        if (!WEB3FORMS_ACCESS_KEY) {
+            formNote.textContent =
+                'The contact form needs a Web3Forms access key before it can send messages.';
+            formNote.className = 'form-note error';
+            return;
+        }
 
-        console.log("Submit Intercepted");
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const formData = new FormData(contactForm);
+        formData.set('access_key', WEB3FORMS_ACCESS_KEY);
 
-        formNote.textContent = "Sending message...";
-        formNote.className = "form-note";
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+        formNote.textContent = 'Sending message...';
+        formNote.className = 'form-note';
 
         try {
-            const formData = new FormData(contactForm);
-
             const response = await fetch(contactForm.action, {
-                method: "POST",
-                body: formData,
+                method: 'POST',
                 headers: {
-                    "Accept": "application/json"
-                }
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
             });
+            const result = await response.json();
 
-            if (response.ok) {
-                formNote.textContent =
-                    "✅ Thank you! Your message has been sent successfully.";
-                formNote.className = "form-note success";
-
-                contactForm.reset();
-
-                setTimeout(() => {
-                    formNote.textContent = "";
-                    formNote.className = "form-note";
-                }, 5000);
-            } else {
-                throw new Error("Form submission failed");
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || result.body?.message || 'Form submission failed.');
             }
 
+            formNote.textContent = 'Thank you! Your message has been sent successfully.';
+            formNote.className = 'form-note success';
+            contactForm.reset();
         } catch (error) {
-            console.error(error);
-
+            console.error('Contact form submission failed:', error);
             formNote.textContent =
-                "❌ Failed to send message. Please try again.";
-            formNote.className = "form-note error";
+                error instanceof Error ? error.message : 'Failed to send message. Please try again.';
+            formNote.className = 'form-note error';
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
         }
     });
 }
